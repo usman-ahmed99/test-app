@@ -4,8 +4,8 @@
 *.pyc
 *.swp
 
-.upload-keystore.jks
-.key.properties
+*.jks
+*.properties
 
 .DS_Store
 .atom/
