@@ -3,6 +3,10 @@
 *.log
 *.pyc
 *.swp
+
+.upload-keystore.jks
+./android/key.properties
+
 .DS_Store
 .atom/
 .buildlog/
