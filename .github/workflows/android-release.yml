@@ -24,7 +24,7 @@ jobs:
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - name: Build and Deploy
         run: |
-          flutter build appbundle --release --verbose --no-tree-shake-icons --split-debug-info --obfuscate --split-per-abi --no-sound-null-safety \
+          flutter build appbundle --release\
             --build-number=$GITHUB_RUN_NUMBER \
             --build-name=$GITHUB_SHA \
             --dart-define=KEY_ALIAS=$KEY_ALIAS \
