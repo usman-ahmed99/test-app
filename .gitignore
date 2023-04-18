@@ -4,8 +4,8 @@
 *.pyc
 *.swp
 
-.upload-keystore.jks
-./android/key.properties
+upload-keystore.jks
+key.properties
 
 .DS_Store
 .atom/
