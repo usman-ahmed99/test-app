@@ -9,12 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Create key.properties
-        run: |
-          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
         with:
@@ -22,7 +16,27 @@ jobs:
           channel: 'stable'
           dart-version: '2.19.6'
       - run: flutter pub get
-      - run: flutter build appbundle --release
+      - name: Download Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: upload-keystore.jks
+          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      - name: Build and Deploy
+        run: |
+          flutter build appbundle --release --verbose --no-tree-shake-icons --split-debug-info --obfuscate --split-per-abi --no-sound-null-safety \
+            --build-number=$GITHUB_RUN_NUMBER \
+            --build-name=$GITHUB_SHA \
+            --dart-define=KEY_ALIAS=$KEY_ALIAS \
+            --dart-define=STORE_PASSWORD=$STORE_PASSWORD \
+            --dart-define=KEY_PASSWORD=$KEY_PASSWORD
+          echo "::set-output name=apk_path::$(find build/app/outputs/bundle/release/app.aab)"
+        env:
+          BUILD_DIR: build/app/outputs/bundle/release
+          STORE_FILE: ${{ steps.upload-keystore.outputs.filePath }}
+          KEY_ALIAS: ${{ secrets.KEYALIAS }}
+          STORE_PASSWORD: ${{ secrets.STOREPASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEYPASSWORD }}
       - uses: actions/upload-artifact@v2
         with:
           name: Release AAB
