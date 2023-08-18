@@ -9,17 +9,34 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Decode and Setup SSH Keys and known_hosts for fastlane match
-      run: |
-        SSH_PATH="$HOME/.ssh"
-        mkdir -p "$SSH_PATH"
-        touch "$SSH_PATH/known_hosts"
-        echo "$PRIVATE_KEY_BASE64" | base64 --decode > "$SSH_PATH/id_rsa"
-        chmod 700 "$SSH_PATH"
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        chmod 600 "$SSH_PATH/known_hosts"
-        chmod 600 "$SSH_PATH/id_rsa"
-        eval $(ssh-agent)
-        ssh-add "$SSH_PATH/id_rsa"
-      env:
-        PRIVATE_KEY_BASE64: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Select Xcode version
+      run: sudo xcode-select -s '/Applications/Xcode_14.3.1.app/Contents/Developer'
+    - name: Bundle install
+      run: cd ./ios && bundle install
+    - name: Setup JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: "12.x"
+    # - name: Setup flutter
+    #   uses: subosito/flutter-action@v1
+    #   with:
+    #     flutter-version: "3.10.6"
+    #     channel: "stable"
+    # - name: Install tools
+    #   run: |
+    #     flutter pub get
+    #     cd ./ios && pod install
+    # - name: Decode and Setup SSH Keys and known_hosts for fastlane match
+    #   run: |
+    #     SSH_PATH="$HOME/.ssh"
+    #     mkdir -p "$SSH_PATH"
+    #     touch "$SSH_PATH/known_hosts"
+    #     echo "$PRIVATE_KEY_BASE64" | base64 --decode > "$SSH_PATH/id_rsa"
+    #     chmod 700 "$SSH_PATH"
+    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+    #     chmod 600 "$SSH_PATH/known_hosts"
+    #     chmod 600 "$SSH_PATH/id_rsa"
+    #     eval $(ssh-agent)
+    #     ssh-add "$SSH_PATH/id_rsa"
+    #   env:
+    #     PRIVATE_KEY_BASE64: ${{ secrets.SSH_PRIVATE_KEY }}
