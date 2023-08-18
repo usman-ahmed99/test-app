@@ -5,18 +5,22 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Select Xcode version
-      run: sudo xcode-select -s '/Applications/Xcode_14.3.1.app/Contents/Developer'
-    - name: Bundle install
-      run: cd ./ios && bundle install
-    - name: Setup JDK
-      uses: actions/setup-java@v1
-      with:
-        java-version: "12.x"
+    deploy:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Install and Select Xcode version
+              run: |
+                chmod +x install_xcode.sh
+                ./install_xcode.sh
+              shell: bash
+            - name: Your Other Deployment Steps
+              run: |
+                # Add your deployment steps here
+              shell: bash
+      
+      
+      
     # - name: Setup flutter
     #   uses: subosito/flutter-action@v1
     #   with:
