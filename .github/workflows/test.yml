@@ -2,25 +2,15 @@ name: AppStore Release
 on:
   push:
     branches:
-      - main
+      - ios-deployment-testflight
 
 jobs:
-    deploy:
-        runs-on: macos-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Install and Select Xcode version
-              run: |
-                chmod +x install_xcode.sh
-                ./install_xcode.sh
-              shell: bash
-            - name: Your Other Deployment Steps
-              run: |
-                # Add your deployment steps here
-              shell: bash
-      
-      
-      
+  deploy:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Select Xcode version
+      run: sudo xcode-select -s '/Applications/Xcode_14.3.app/Contents/Developer'
     # - name: Setup flutter
     #   uses: subosito/flutter-action@v1
     #   with:
