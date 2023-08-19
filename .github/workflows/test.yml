@@ -2,7 +2,7 @@ name: AppStore Release
 on:
   push:
     branches:
-      - ios-deployment-testflight
+      - main
 
 jobs:
   deploy:
